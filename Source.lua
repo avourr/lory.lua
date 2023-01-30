@@ -13,7 +13,7 @@ if not game:IsLoaded() then
 	game.Loaded:Wait()
 end
 local function Load(Name)
-	local SourceName,Success,Result = ("%s.lua"):format(Name),pcall(game.HttpGet,game,("https://raw.githubusercontent.com/notvxs/lory.lua/main/Source.lua"):format(Name),true)
+	local SourceName,Success,Result = ("%s.lua"):format(Name),pcall(game.HttpGet,game,("https://raw.githubusercontent.com/Amourousity/%s/main/Source.lua"):format(Name),true)
 	if Success then
 		if writefile then
 			writefile(SourceName,Result)
@@ -30,7 +30,7 @@ for Name,Function in Load"Utilitas"{} do
 	getfenv()[Name] = Function
 end
 local GlobalEnvironment = getgenv and getgenv() or shared
-pcall(GlobalEnvironment.CloseLory)
+pcall(GlobalEnvironment.CloseUltimatum)
 local Settings
 do
 	local DefaultSettings = {
@@ -42,7 +42,7 @@ do
 		Notifications = "All",
 		Keybind = "LeftBracket"
 	}
-	local SettingsTable = DecodeJSON(isfile and isfile"lorySettings.json" and readfile"UltimatumSettings.json":gsub("^%bA{","{"),DefaultSettings)
+	local SettingsTable = DecodeJSON(isfile and isfile"UltimatumSettings.json" and readfile"UltimatumSettings.json":gsub("^%bA{","{"),DefaultSettings)
 	for SettingName in SettingsTable do
 		if DefaultSettings[SettingName] == nil then
 			SettingsTable[SettingName] = nil
@@ -315,7 +315,7 @@ local function Notify(Options)
 		Urgent = false,
 		Yields = false,
 		Text = "(no text)",
-		Title = "Ultimatum",
+		Title = "lory.lua",
 		CalculateDuration = true
 	})
 	Options.Text = ("<b>%s</b>\n%s"):format(Options.Title,Options.Text)
@@ -623,7 +623,7 @@ local function CreateWindow(Title,DataList)
 				Size = UDim2.new(1,-45,0,20),
 				Position = UDim2.new(0,5,0,0),
 				TextColor3 = Color3.new(1,1,1),
-				Text = Valid.String(Title,"lory.lua"),
+				Text = Valid.String(Title,"Ultimatum"),
 				TextXAlignment = Enum.TextXAlignment.Left
 			}
 		},
@@ -805,16 +805,16 @@ Connections = {
 	isfile and Connect(Service"Run".Heartbeat,function()
 		if Settings.AutoUpdate and 60 < os.clock()-LastCheck then
 			LastCheck = os.clock()
-			local Success,Result = pcall(game.HttpGet,game,"",true)
-			if Success and (not isfile"Ultimatum.lua" or Result ~= readfile"lory.lua") then
+			local Success,Result = pcall(game.HttpGet,game,"https://raw.githubusercontent.com/Amourousity/Ultimatum/main/Source.lua",true)
+			if Success and (not isfile"Ultimatum.lua" or Result ~= readfile"Ultimatum.lua") then
 				writefile("Ultimatum.lua",Result)
 				Notify{
 					Yields = true,
 					Title = "Out of Date",
-					Text = "Your version of lory.lua is outdated! Updating to newest version..."
+					Text = "Your version of Ultimatum is outdated! Updating to newest version..."
 				}
 				loadstring(Result,"Ultimatum")()
-			elseif not Success and not isfile"lory.lua" then
+			elseif not Success and not isfile"Ultimatum.lua" then
 				Notify{
 					Text = Result,
 					Urgent = true,
@@ -829,8 +829,8 @@ Connections = {
 		end
 	end or function(TeleportState)
 		if Settings.LoadOnRejoin and TeleportState.Name == "Started" then
-			local Success,Result = pcall(game.HttpGet,game,"https://raw.githubusercontent.com/notvxs/lory.lua/main/Source.lua",true)
-			queue_on_teleport(Success and Result or ("warn'HttpGet failed: %s (lory.lua cannot run)'"):format(Result))
+			local Success,Result = pcall(game.HttpGet,game,"https://raw.githubusercontent.com/Amourousity/Ultimatum/main/Source.lua",true)
+			queue_on_teleport(Success and Result or ("warn'HttpGet failed: %s (Ultimatum cannot run)'"):format(Result))
 		end
 	end),
 	Connect(Gui.Main.MouseEnter,function()
@@ -919,9 +919,9 @@ local function LoadCommands(Lua,Name)
 		Commands[CommandName] = Info
 	end
 end
-GlobalEnvironment.AddLorymCommands = LoadCommands
-pcall(GlobalEnvironment.CloseLory)
-GlobalEnvironment.CloseLor = function()
+GlobalEnvironment.AddUltimatumCommands = LoadCommands
+pcall(GlobalEnvironment.CloseUltimatum)
+GlobalEnvironment.CloseUltimatum = function()
 	local Unfinished = 0
 	for _,Info in Commands do
 		if Info.ToggleCheck and Info.Enabled then
@@ -942,8 +942,8 @@ end
 local function GetCommandSet(ID)
 	ID = Valid.Number(ID,0)
 	local Success,Result = pcall(game.HttpGet,game,("https://raw.githubusercontent.com/Amourousity/Ultimatum/main/CommandSets/%d.lua"):format(ID),true)
-	if isfolder and not isfolder"LoryCommandSets" then
-		makefolder"LoryCommandSets"
+	if isfolder and not isfolder"UltimatumCommandSets" then
+		makefolder"UltimatumCommandSets"
 	end
 	if Success then
 		if isfolder then
@@ -964,8 +964,8 @@ end
 GetCommandSet()
 GetCommandSet(game.PlaceId)
 EnableDrag(Gui.Main,true)
-if Settings.PlayIntro == "Always" or Settings.PlayIntro == "Once" and not GlobalEnvironment.loryLoaded then
-	GlobalEnvironment.loryLoaded = true
+if Settings.PlayIntro == "Always" or Settings.PlayIntro == "Once" and not GlobalEnvironment.UltimatumLoaded then
+	GlobalEnvironment.UltimatumLoaded = true
 	Service"UserInput".OverrideMouseIconBehavior = Enum.OverrideMouseIconBehavior.ForceHide
 	task.delay(1.5,function()
 		Service"UserInput".OverrideMouseIconBehavior = Enum.OverrideMouseIconBehavior.None
@@ -1033,7 +1033,7 @@ for Name,Properties in {
 } do
 	if not Gui or not Gui[Name] then
 		pcall(GlobalEnvironment.CloseUltimatum)
-		error(not Gui and "lory.lua's Gui was never instantiated!" or ("Gui object \"%s\" was deleted or never instantiated!"):format(Name))
+		error(not Gui and "Ultimatum's Gui was never instantiated!" or ("Gui object \"%s\" was deleted or never instantiated!"):format(Name))
 		return
 	end
 	for Property,Value in Properties do
