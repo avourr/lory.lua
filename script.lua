@@ -1,10 +1,14 @@
-  --[[]    [|] [|]    [|||||||||] [|||||||||] [||]    [||]      [|] [|||||||||] [|]    [|] [||]    [||]
-   [|]    [|] [|]        [|]         [|]     [||||] [||||]   [|] [|]   [|]     [|]    [|] [||||] [||||]
-  [|]    [|] [|]        [|]         [|]     [|] [|||] [|]  [|]   [|]  [|]     [|]    [|] [|] [|||] [|]
- [|]    [|] [|]        [|]         [|]     [|]  [|]  [|] [|||||||||] [|]     [|]    [|] [|]  [|]  [|]
-[|]    [|] [|]        [|]         [|]     [|]       [|] [|]     [|] [|]     [|]    [|] [|]       [|]
-[|]  [|]  [|]        [|]         [|]     [|]       [|] [|]     [|] [|]      [|]  [|]  [|]       [|]
-[||||]   [||||||||] [|]     [|||||||||] [|]       [|] [|]     [|] [|]       [||||]   [|]       []]
+ /$$                                   /$$                    
+| $$                                  | $$                    
+| $$  /$$$$$$   /$$$$$$  /$$   /$$    | $$ /$$   /$$  /$$$$$$ 
+| $$ /$$__  $$ /$$__  $$| $$  | $$    | $$| $$  | $$ |____  $$
+| $$| $$  \ $$| $$  \__/| $$  | $$    | $$| $$  | $$  /$$$$$$$
+| $$| $$  | $$| $$      | $$  | $$    | $$| $$  | $$ /$$__  $$
+| $$|  $$$$$$/| $$      |  $$$$$$$ /$$| $$|  $$$$$$/|  $$$$$$$
+|__/ \______/ |__/       \____  $$|__/|__/ \______/  \_______/
+                         /$$  | $$                            
+                        |  $$$$$$/                            
+                         \______/                             
 if not game:IsLoaded() then
 	game.Loaded:Wait()
 end
@@ -915,9 +919,9 @@ local function LoadCommands(Lua,Name)
 		Commands[CommandName] = Info
 	end
 end
-GlobalEnvironment.AddUltimatumCommands = LoadCommands
-pcall(GlobalEnvironment.CloseUltimatum)
-GlobalEnvironment.CloseUltimatum = function()
+GlobalEnvironment.AddLorymCommands = LoadCommands
+pcall(GlobalEnvironment.CloseLory)
+GlobalEnvironment.CloseLor = function()
 	local Unfinished = 0
 	for _,Info in Commands do
 		if Info.ToggleCheck and Info.Enabled then
@@ -938,8 +942,8 @@ end
 local function GetCommandSet(ID)
 	ID = Valid.Number(ID,0)
 	local Success,Result = pcall(game.HttpGet,game,("https://raw.githubusercontent.com/Amourousity/Ultimatum/main/CommandSets/%d.lua"):format(ID),true)
-	if isfolder and not isfolder"UltimatumCommandSets" then
-		makefolder"UltimatumCommandSets"
+	if isfolder and not isfolder"LoryCommandSets" then
+		makefolder"LoryCommandSets"
 	end
 	if Success then
 		if isfolder then
@@ -960,8 +964,8 @@ end
 GetCommandSet()
 GetCommandSet(game.PlaceId)
 EnableDrag(Gui.Main,true)
-if Settings.PlayIntro == "Always" or Settings.PlayIntro == "Once" and not GlobalEnvironment.UltimatumLoaded then
-	GlobalEnvironment.UltimatumLoaded = true
+if Settings.PlayIntro == "Always" or Settings.PlayIntro == "Once" and not GlobalEnvironment.loryLoaded then
+	GlobalEnvironment.loryLoaded = true
 	Service"UserInput".OverrideMouseIconBehavior = Enum.OverrideMouseIconBehavior.ForceHide
 	task.delay(1.5,function()
 		Service"UserInput".OverrideMouseIconBehavior = Enum.OverrideMouseIconBehavior.None
@@ -1029,7 +1033,7 @@ for Name,Properties in {
 } do
 	if not Gui or not Gui[Name] then
 		pcall(GlobalEnvironment.CloseUltimatum)
-		error(not Gui and "Ultimatum's Gui was never instantiated!" or ("Gui object \"%s\" was deleted or never instantiated!"):format(Name))
+		error(not Gui and "lory.lua's Gui was never instantiated!" or ("Gui object \"%s\" was deleted or never instantiated!"):format(Name))
 		return
 	end
 	for Property,Value in Properties do
