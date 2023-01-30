@@ -13,7 +13,7 @@ if not game:IsLoaded() then
 	game.Loaded:Wait()
 end
 local function Load(Name)
-	local SourceName,Success,Result = ("%s.lua"):format(Name),pcall(game.HttpGet,game,("https://raw.githubusercontent.com/Amourousity/%s/main/Source.lua"):format(Name),true)
+	local SourceName,Success,Result = ("%s.lua"):format(Name),pcall(game.HttpGet,game,("https://raw.githubusercontent.com/notvxs/lory.lua/main/Source.lua"):format(Name),true)
 	if Success then
 		if writefile then
 			writefile(SourceName,Result)
@@ -623,7 +623,7 @@ local function CreateWindow(Title,DataList)
 				Size = UDim2.new(1,-45,0,20),
 				Position = UDim2.new(0,5,0,0),
 				TextColor3 = Color3.new(1,1,1),
-				Text = Valid.String(Title,"Ultimatum"),
+				Text = Valid.String(Title,"lory.lua"),
 				TextXAlignment = Enum.TextXAlignment.Left
 			}
 		},
@@ -805,16 +805,16 @@ Connections = {
 	isfile and Connect(Service"Run".Heartbeat,function()
 		if Settings.AutoUpdate and 60 < os.clock()-LastCheck then
 			LastCheck = os.clock()
-			local Success,Result = pcall(game.HttpGet,game,"https://raw.githubusercontent.com/Amourousity/Ultimatum/main/Source.lua",true)
-			if Success and (not isfile"Ultimatum.lua" or Result ~= readfile"Ultimatum.lua") then
+			local Success,Result = pcall(game.HttpGet,game,"",true)
+			if Success and (not isfile"Ultimatum.lua" or Result ~= readfile"lory.lua") then
 				writefile("Ultimatum.lua",Result)
 				Notify{
 					Yields = true,
 					Title = "Out of Date",
-					Text = "Your version of Ultimatum is outdated! Updating to newest version..."
+					Text = "Your version of lory.lua is outdated! Updating to newest version..."
 				}
 				loadstring(Result,"Ultimatum")()
-			elseif not Success and not isfile"Ultimatum.lua" then
+			elseif not Success and not isfile"lory.lua" then
 				Notify{
 					Text = Result,
 					Urgent = true,
@@ -829,8 +829,8 @@ Connections = {
 		end
 	end or function(TeleportState)
 		if Settings.LoadOnRejoin and TeleportState.Name == "Started" then
-			local Success,Result = pcall(game.HttpGet,game,"https://raw.githubusercontent.com/Amourousity/Ultimatum/main/Source.lua",true)
-			queue_on_teleport(Success and Result or ("warn'HttpGet failed: %s (Ultimatum cannot run)'"):format(Result))
+			local Success,Result = pcall(game.HttpGet,game,"https://raw.githubusercontent.com/notvxs/lory.lua/main/Source.lua",true)
+			queue_on_teleport(Success and Result or ("warn'HttpGet failed: %s (lory.lua cannot run)'"):format(Result))
 		end
 	end),
 	Connect(Gui.Main.MouseEnter,function()
